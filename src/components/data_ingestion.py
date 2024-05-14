@@ -44,7 +44,6 @@ class DataIngestion:
                 self.ingestion_config.test_data_path
                 )
 
-
         except Exception as e:
             raise CustomException(e,sys)   
         
@@ -58,3 +57,5 @@ if __name__=="__main__":
     modeltrainer=ModelTrainer()
     r2_s,model_name=modeltrainer.initiate_model_trainer(train_arr,test_arr)
     print("the r2_score is [{0}] and the model is [{1}]".format(r2_s,model_name))
+    
+

@@ -20,6 +20,7 @@ from src.logger import logging
 
 from src.utils import save_object
 from src.utils import evaluate_model
+from sklearn.model_selection import GridSearchCV
 
 @dataclass
 class ModelTrainerConfig:
@@ -50,8 +51,46 @@ class ModelTrainer:
                 "CatBoosting Classfier":CatBoostRegressor(verbose=False),
                 "adaboosst":AdaBoostRegressor(),
             }
+            # Define the hyperparameters for each algorithm
+            param_grid = {
+                "random forest": {
+                    "n_estimators": [100, 200, 300],
+                    "max_depth": [None, 5, 10],
+                    "min_samples_split": [2, 5, 10],
+                },
+                "Decion tree": {
+                    "max_depth": [None, 5, 10],
+                    "min_samples_split": [2, 5, 10],
+                },
+                "Gradient boosting": {
+                    "n_estimators": [100, 200, 300],
+                    "learning_rate": [0.1, 0.01, 0.001],
+                    "max_depth": [3, 5, 10],
+                },
+                "Linear regression": {},
+                "K-nearest neighbout": {
+                    "n_neighbors": [3, 5, 7],
+                    "weights": ["uniform", "distance"],
+                },
+                "XGBclassifier": {
+                    "n_estimators": [100, 200, 300],
+                    "learning_rate": [0.1, 0.01, 0.001],
+                    "max_depth": [3, 5, 10],
+                },
+                "CatBoosting Classfier": {
+                    "iterations": [100, 200, 300],
+                    "learning_rate": [0.1, 0.01, 0.001],
+                    "depth": [3, 5, 10],
+                },
+                "adaboosst": {
+                    "n_estimators": [50, 100, 200],
+                    "learning_rate": [0.1, 0.01, 0.001],
+                    "loss": ["linear", "square", "exponential"],
+                },
+            }
+           
 
-            model_report=evaluate_model(X_train=X_train,y_train=y_train,X_test=X_test,y_test=y_test,models=models)
+            model_report=evaluate_model(X_train=X_train,y_train=y_train,X_test=X_test,y_test=y_test,models=models,param_grid=param_grid)
 
             best_model_score=max(sorted(model_report.values()))
 
